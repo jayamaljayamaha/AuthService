@@ -1,0 +1,47 @@
+{
+  "name": "auth-service",
+  "version": "1.0.0",
+  "description": "Microservice for handle all the business logics related to user authentication and autharization",
+  "main": "index.ts",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "test": "jest --watchAll --no-cache --detectOpenHandles"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": [
+      "./src/test/setup.ts"
+    ]
+  },
+  "keywords": [],
+  "author": "Jayamal",
+  "license": "ISC",
+  "dependencies": {
+    "@randomn/drescode-common": "0.0.1",
+    "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
+    "exception-library": "^1.1.2",
+    "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
+    "express-validator": "^6.12.1",
+    "joi": "^17.4.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.0.5",
+    "ts-node": "^1.1.8"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.13",
+    "@types/jest": "^26.0.24",
+    "@types/joi": "^17.2.3",
+    "@types/jsonwebtoken": "^8.5.4",
+    "@types/mongoose": "^5.11.97",
+    "@types/supertest": "^2.0.11",
+    "jest": "^27.0.6",
+    "mongodb-memory-server": "^7.3.4",
+    "supertest": "^6.1.4",
+    "ts-jest": "^27.0.4"
+  }
+}
