@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import app from "./api/v1/app";
+import logger from "./api/v1/Config/Logger";
 
 if (!process.env.JWT_SECRET) {
   throw new Error("JWT_SECRET is not defined");
@@ -21,12 +22,12 @@ mongoose
     `mongodb://${process.env.DB_URI}:${process.env.DB_PORT}/${process.env.DB_NAME}`
   )
   .then((data) => {
-    console.log("Connected to database");
+    logger.info("Connected to database");
   })
   .catch((err) => {
-    console.error(err);
+    logger.error(err);
   });
 
 app.listen(process.env.SERVER_PORT, () => {
-  console.log(`Auth server is listning on port ${process.env.SERVER_PORT}`);
+  logger.info(`Auth server is listning on port ${process.env.SERVER_PORT}`);
 });
