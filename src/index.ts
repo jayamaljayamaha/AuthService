@@ -29,5 +29,5 @@ mongoose
   });
 
 app.listen(process.env.SERVER_PORT, () => {
-  logger.info(`Auth server is listning on port ${process.env.SERVER_PORT}`);
+  logger.info(`Auth service is listning on port ${process.env.SERVER_PORT}`);
 });

@@ -10,6 +10,7 @@ import User from "../Models/User";
 import { compare, toHash } from "./PasswordEncryptService";
 import jwt from "jsonwebtoken";
 import BlackListTokens from "../Models/BlackListTokens";
+import logger from "../Config/Logger";
 
 const jwtSecret = process.env.JWT_SECRET!;
 
@@ -18,6 +19,7 @@ export const validateAuthData = (data: any, schema: Joi.ObjectSchema) => {
 };
 
 export const auth = (data: AuthDataInterface) => {
+  logger.info("Get email and password from AuthDataInterface data");
   const { email, password } = data;
   const userReturn: UserReturnType = {
     user: {
@@ -32,7 +34,9 @@ export const auth = (data: AuthDataInterface) => {
   return new Promise((resolve, reject) => {
     User.findOne({ email: email })
       .then((user: UserDocument) => {
+        logger.info("Getting user by email from database");
         if (!user) {
+          logger.error(`User not found for email ${email}`);
           throw new NotFoundError(`User by email: ${email} is not found`);
         }
         userReturn.user.id = user._id;
@@ -40,13 +44,16 @@ export const auth = (data: AuthDataInterface) => {
         userReturn.user.lastname = user.lastname;
         userReturn.user.role = user.role;
         userReturn.user.email = user.email;
-
+        logger.info(`User found for email ${email}`);
         return compare(password, user.password);
       })
       .then((result: boolean) => {
         if (!result) {
+          logger.error("password is invalid");
           throw new BadRequestError("Invalid credentials");
         }
+        logger.info("Password validation success");
+        logger.info("Creating JWT token");
         const userJwt = jwt.sign(
           {
             id: userReturn.user.id,
@@ -60,6 +67,7 @@ export const auth = (data: AuthDataInterface) => {
             expiresIn: 60 * 30,
           }
         );
+        logger.info("JWT token created");
         userReturn.token = userJwt;
         resolve(userReturn);
       })
@@ -70,19 +78,26 @@ export const auth = (data: AuthDataInterface) => {
 };
 
 export const invalidateToken = (token: string) => {
-  const blackToken = new BlackListTokens(token);
+  logger.info("Invalidating the token");
+  const blackToken = new BlackListTokens({ token: token });
+  logger.info("Save token to BlackListToken schema");
   return blackToken.save();
 };
 
 export const signup = (data: SignupDataInterface) => {
   return new Promise((resolve, reject) => {
+    logger.info("Encrypting the password");
     toHash(data.password)
       .then((encryptedPassword) => {
+        logger.info("Password encrypted");
         data.password = encryptedPassword;
         const user = new User(data);
+        logger.info("Saving the new user details to the database");
         return user.save();
       })
       .then((user: UserDocument) => {
+        logger.info("User saved successfully");
+        logger.info("Creating JWT token");
         const userJwt = jwt.sign(
           {
             id: user.id,
@@ -96,6 +111,7 @@ export const signup = (data: SignupDataInterface) => {
             expiresIn: 60 * 30,
           }
         );
+        logger.info("JWT token created");
         const userReturn: UserReturnType = {
           user: {
             id: user.id,
@@ -109,7 +125,7 @@ export const signup = (data: SignupDataInterface) => {
         resolve(userReturn);
       })
       .catch((err: Error) => {
-        resolve(err);
+        reject(err);
       });
   });
 };
