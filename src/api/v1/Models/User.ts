@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
+    unique: true,
   },
   password: {
     type: String,
@@ -29,5 +30,7 @@ const userSchema = new mongoose.Schema({
 userSchema.set("versionKey", "version");
 
 const User = mongoose.model<UserDocument, any>("User", userSchema);
+
+User.createIndexes();
 
 export default User;

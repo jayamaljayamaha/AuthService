@@ -45,7 +45,7 @@ export const signIn = (req: Request, res: Response, next: NextFunction) => {
   logger.info("Data validated successfully");
   auth(body)
     .then((data) => {
-      logger.info(`User authenticated successfully: ${data}`);
+      logger.info(`User authenticated successfully: ${JSON.stringify(data)}`);
       res.status(200).send(data);
     })
     .catch((err) => {
@@ -91,10 +91,10 @@ export const signUp = (req: Request, res: Response, next: NextFunction) => {
   signup(body)
     .then((response) => {
       logger.info(`User signed up successfully: ${JSON.stringify(response)}`);
-      return res.status(200).send(response);
+      res.status(201).send(response);
     })
     .catch((err) => {
-      logger.info("Exception happened when signup user");
+      logger.info(`Exception happened when signup user ${err}`);
       next(err);
     });
 };

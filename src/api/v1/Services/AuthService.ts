@@ -1,4 +1,8 @@
-import { BadRequestError, NotFoundError } from "exception-library";
+import {
+  BadRequestError,
+  InternalServerError,
+  NotFoundError,
+} from "exception-library";
 import Joi, { isError } from "joi";
 import {
   AuthDataInterface,
@@ -125,7 +129,7 @@ export const signup = (data: SignupDataInterface) => {
         resolve(userReturn);
       })
       .catch((err: Error) => {
-        reject(err);
+        reject(new InternalServerError(err.message));
       });
   });
 };
