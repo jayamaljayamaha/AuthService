@@ -1,7 +1,7 @@
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
-import { clearDb } from "./CommonConfigs";
 
+jest.setTimeout(30000);
 let mongoDbMemoryInstance: MongoMemoryServer;
 beforeAll((done) => {
   MongoMemoryServer.create()

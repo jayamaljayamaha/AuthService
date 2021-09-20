@@ -35,7 +35,7 @@ export const auth = (data: AuthDataInterface) => {
     },
     token: "",
   };
-  return new Promise((resolve, reject) => {
+  return new Promise<UserReturnType>((resolve, reject) => {
     User.findOne({ email: email })
       .then((user: UserDocument) => {
         logger.info("Getting user by email from database");
@@ -89,7 +89,7 @@ export const invalidateToken = (token: string) => {
 };
 
 export const signup = (data: SignupDataInterface) => {
-  return new Promise((resolve, reject) => {
+  return new Promise<UserReturnType>((resolve, reject) => {
     logger.info("Encrypting the password");
     toHash(data.password)
       .then((encryptedPassword) => {
