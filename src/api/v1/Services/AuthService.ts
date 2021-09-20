@@ -1,4 +1,8 @@
-import { BadRequestError, NotFoundError } from "exception-library";
+import {
+  BadRequestError,
+  InternalServerError,
+  NotFoundError,
+} from "exception-library";
 import Joi, { isError } from "joi";
 import {
   AuthDataInterface,
@@ -31,7 +35,7 @@ export const auth = (data: AuthDataInterface) => {
     },
     token: "",
   };
-  return new Promise((resolve, reject) => {
+  return new Promise<UserReturnType>((resolve, reject) => {
     User.findOne({ email: email })
       .then((user: UserDocument) => {
         logger.info("Getting user by email from database");
@@ -85,7 +89,7 @@ export const invalidateToken = (token: string) => {
 };
 
 export const signup = (data: SignupDataInterface) => {
-  return new Promise((resolve, reject) => {
+  return new Promise<UserReturnType>((resolve, reject) => {
     logger.info("Encrypting the password");
     toHash(data.password)
       .then((encryptedPassword) => {
@@ -125,7 +129,7 @@ export const signup = (data: SignupDataInterface) => {
         resolve(userReturn);
       })
       .catch((err: Error) => {
-        reject(err);
+        reject(new InternalServerError(err.message));
       });
   });
 };
