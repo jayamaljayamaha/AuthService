@@ -17,6 +17,10 @@ if (!process.env.DB_PORT) {
 if (!process.env.SERVER_PORT) {
   throw new Error("SERVER_PORT is not defined");
 }
+if (!process.env.LOG_FILE_PATH) {
+  throw new Error("LOG_FILE_PATH is not defined in env variables");
+}
+
 mongoose
   .connect(
     `mongodb://${process.env.DB_URI}:${process.env.DB_PORT}/${process.env.DB_NAME}`
